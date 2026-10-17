@@ -1,0 +1,21 @@
+
+1. Para executar o tradutor, digite "python3 posfixo.py
+
+2. Faça a entrada da expressão a ser traduzida pelo terminal
+   para a entrada "a + a * a - a", o tradutor gera "A A A * + A -" 
+   para a entrada "a + a * a - - a", gera "ERRO de sintaxe perto de '-' A A A * + A"
+
+3. Exemplos de entrada e saída para o posfixo1.py
+   para a entrada "a + b * a / b + a", o tradutor gera "A B A * B / + A +"
+   para a entrada "a + b * a / b +", gera "ERRO de sintaxe no EOF"
+
+4. Exemplos de entrada e saída para o posfixo2.py
+   para a entrada "a and b + a", o tradutor gera "A  B  A  +  and"
+   para a entrada "a and b or a b", gera "ERRO de sintaxe perto de 'b'"
+
+5. Exemplos de entrada e saída para o posfixo3.py
+   para a entrada "b and b or b and b", o tradutor gera "B  B  and  B  B  and  or"
+   para a entrada "a + a * a - a", o tradutor gera "A A A * + A -"
+   para a entrada "a + b or a", gera "ERRO semântico: '+' exige operandos int" e 
+   "ERRO semântico: 'or' exige operandos bool"
+
