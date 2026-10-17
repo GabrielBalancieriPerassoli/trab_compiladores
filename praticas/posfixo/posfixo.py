@@ -10,7 +10,7 @@ t_ASTERISCO = r'\*'
 t_DIV       = r'/'
 
 def t_IDENT(t):
-    r'a'
+    r'a|b'
     return t
 
 t_ignore = ' \t\n'
@@ -48,7 +48,8 @@ def p_termo_fator(p):
 
 def p_fator_ident(p):
     "fator : IDENT"
-    p[0] = ' A '
+    p_aux = p[1].upper()
+    p[0] = "" + p_aux + " "
 
 def p_error(t):
     if t:
