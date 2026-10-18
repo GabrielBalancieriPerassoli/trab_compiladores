@@ -2,12 +2,20 @@ import ply.lex as lex
 import ply.yacc as yacc
 
 # ---------- LÉXICO ----------
-tokens = ('IDENT', 'MAIS', 'MENOS', 'ASTERISCO', 'DIV')
+tokens = ('IDENT', 'MAIS', 'MENOS', 'ASTERISCO', 'DIV', 'AND', 'OR')
 
 t_MAIS      = r'\+'
 t_MENOS     = r'-'
 t_ASTERISCO = r'\*'
 t_DIV       = r'/'
+
+def t_AND(t):
+    r'and'
+    return t
+
+def t_OR(t):
+    r'or'
+    return t
 
 def t_IDENT(t):
     r'a|b'
@@ -22,6 +30,22 @@ def t_error(t):
 lexer = lex.lex()
 
 # ---------- SINTÁTICO ----------
+def p_or_op(p):
+    "or_op : or_op OR and_op"
+    p[0] = p[1] + p[3] + " or "
+
+def p_or_desce(p):
+    "or_op : and_op"
+    p[0] = p[1]
+
+def p_and_op(p):
+    "and_op : and_op AND expr"
+    p[0] = p[1] + p[3] + " and "
+
+def p_and_desce(p):
+    "and_op : expr"
+    p[0] = p[1]
+
 def p_expr_mais(p):
     "expr : expr MAIS termo"
     p[0] = p[1] + p[3] + ' + '
@@ -57,7 +81,7 @@ def p_error(t):
     else:
         print("ERRO de sintaxe no EOF")
 
-parser = yacc.yacc(start='expr')
+parser = yacc.yacc(start='or_op')
 
 # ---------- MAIN ----------
 if __name__ == "__main__":
