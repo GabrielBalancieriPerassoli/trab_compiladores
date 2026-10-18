@@ -30,9 +30,19 @@ def t_error(t):
 lexer = lex.lex()
 
 # ---------- SINTÁTICO ----------
+def operacao_binaria(p, operador, tipo_exigido, tipo_resultado):
+    texto1, tipo1 = p[1]
+    texto2, tipo2 = p[3]
+
+    if tipo1 != tipo_exigido or tipo2 != tipo_exigido:
+        print(f"ERRO semântico: '{operador}' exige operandos {tipo_exigido}")
+        p[0] = ('', 'erro')
+    else:
+        p[0] = (texto1 + texto2 + f' {operador} ', tipo_resultado)
+
 def p_or_op(p):
     "or_op : or_op OR and_op"
-    p[0] = p[1] + p[3] + " or "
+    operacao_binaria(p, 'or', 'bool', 'bool')   
 
 def p_or_desce(p):
     "or_op : and_op"
@@ -40,19 +50,19 @@ def p_or_desce(p):
 
 def p_and_op(p):
     "and_op : and_op AND expr"
-    p[0] = p[1] + p[3] + " and "
+    operacao_binaria(p, 'and', 'bool', 'bool')    
 
 def p_and_desce(p):
     "and_op : expr"
     p[0] = p[1]
 
-def p_expr_mais(p):
-    "expr : expr MAIS termo"
-    p[0] = p[1] + p[3] + ' + '
+def p_expr_mais(p):                                       
+    "expr : expr MAIS termo"                              
+    operacao_binaria(p, '+', 'int', 'int')         
 
 def p_expr_menos(p):
     "expr : expr MENOS termo"
-    p[0] = p[1] + p[3] + ' - '
+    operacao_binaria(p, '-', 'int', 'int')    
 
 def p_expr_termo(p):
     "expr : termo"
@@ -60,11 +70,11 @@ def p_expr_termo(p):
 
 def p_termo_vezes(p):
     "termo : termo ASTERISCO fator"
-    p[0] = p[1] + p[3] + ' * '
+    operacao_binaria(p, '*', 'int', 'int') 
 
 def p_termo_div(p):
     "termo : termo DIV fator"
-    p[0] = p[1] + p[3] + ' / '
+    operacao_binaria(p, '/', 'int', 'int')
 
 def p_termo_fator(p):
     "termo : fator"
@@ -72,8 +82,14 @@ def p_termo_fator(p):
 
 def p_fator_ident(p):
     "fator : IDENT"
+    tipo = ''
+    if p[1] == 'a':
+        tipo = 'int'
+    else:
+        tipo = 'bool'
+
     p_aux = p[1].upper()
-    p[0] = "" + p_aux + " "
+    p[0] = ("" + p_aux + " ", tipo)
 
 def p_error(t):
     if t:
@@ -92,4 +108,4 @@ if __name__ == "__main__":
 
         resultado = parser.parse(expressao, lexer=lexer)
         if resultado:
-            print(resultado)
+            print(resultado[0])
