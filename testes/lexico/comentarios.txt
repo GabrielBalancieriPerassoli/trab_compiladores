@@ -1,0 +1,4 @@
+( ) // isso some == !=
+// linha inteira de comentário
+; / ,
+// comentário na última linha
