@@ -1,0 +1,9 @@
+iffy programa printer elses
+a==b = = -> - >
+x=-42;
+a<=b>=c!=d
+a&&b||!c
+a & b | c
+1abc _x
+$ # @
+// comentário na última linha
