@@ -1,0 +1,5 @@
+program p {
+    int x;
+    x = 1
+    print(x);
+}

@@ -1,0 +1,4 @@
+program p {
+    bool x;
+    x = a < b < c;
+}

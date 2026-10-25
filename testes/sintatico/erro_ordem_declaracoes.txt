@@ -1,0 +1,6 @@
+program p {
+    fun f() -> void {
+        print(1);
+    }
+    int x;
+}

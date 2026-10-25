@@ -1,0 +1,33 @@
+program exemplo {
+    int n;
+    int r;
+    bool ok;
+
+    fun fatorial(int x) -> int {
+        int aux;
+        if (x <= 1) {
+            return 1;
+        } else {
+            aux = x * fatorial(x - 1);
+        }
+        return aux;
+    }
+
+    fun mostra(int a, bool b) -> void {
+        print(a, b);
+    }
+
+    fun nada() -> bool {
+        return true;
+    }
+
+    read(n);
+    r = fatorial(n);
+    ok = !(r < 0) && n >= 0 || false;
+    while (n > 0) {
+        n = n - -1 / 2;
+        mostra(n, ok);
+    }
+    nada();
+    print(-r * 2, (r + 1) == 3, ok != true);
+}
