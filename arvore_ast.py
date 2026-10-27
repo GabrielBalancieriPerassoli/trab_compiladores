@@ -42,14 +42,44 @@ class Vari(No):
 class Func(No):             
     nome: str
     retorno: str
-    parametros: list[Cmd]
-    variaveis: list[Param]
-    comandos: list[Vari]
+    parametros: list[Param]
+    variaveis: list[Vari]
+    comandos: list[Cmd]
+
+@dataclass
+class Programa(No):
+    nome: str 
+    variaveis: list[Vari]
+    funcoes: list[Func]
+    comandos: list[Cmd]
+@dataclass
+class If(No):
+    condicao: Expr 
+    entao: list[Cmd]
+    senao: list[Cmd]
+
+@dataclass
+class While(No):
+    condicao: Expr 
+    corpo: list[Cmd]
+
+@dataclass
+class Return(No):
+    expressao: Expr
+
+@dataclass
+class Read(No):
+    leitura: list[Id]
+
+@dataclass
+class Print(No):
+    escrita: list[Expr]
 
 
 # ---------- impressora ----------
 
 def print_ast(no, nivel=0):
+
     indent = '    ' * nivel
 
     if isinstance(no, list):
