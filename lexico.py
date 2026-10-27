@@ -60,6 +60,7 @@ class AnalisadorLexico:
     t_ignore = ' \t'
 
     def __init__(self):
+        self.tem_erro = False
         self.lexer = lex.lex(module=self)
 
     def t_ID(self, t):
@@ -81,10 +82,12 @@ class AnalisadorLexico:
         pass
 
     def t_error(self, t):
+        self.tem_erro = True
         print(f"ERRO léxico - símbolo ilegal '{t.value[0]}' na linha {t.lineno}")
         t.lexer.skip(1)
 
     def input(self, data):
+        self.tem_erro = False
         self.lexer.lineno = 1
         self.lexer.input(data)
 

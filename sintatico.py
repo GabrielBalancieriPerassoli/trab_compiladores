@@ -95,6 +95,10 @@ class AnalisadorSintatico:
                    | chamada_comando'''
         pass
 
+    def p_comando_erro(self, p):
+        'comando : error PONTO_VIRGULA'
+        pass
+
     def p_atribuicao(self, p):
         'atribuicao : ID ATRIB expressao PONTO_VIRGULA'
         pass
@@ -210,4 +214,4 @@ class AnalisadorSintatico:
         self.erro = False
         self.lexico.input(data)
         self.parser.parse(lexer=self.lexico)
-        return not self.erro
+        return not self.erro and not self.lexico.tem_erro
