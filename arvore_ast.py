@@ -75,6 +75,34 @@ class Read(No):
 class Print(No):
     escrita: list[Expr]
 
+@dataclass
+class Chamada(Expr):
+    nome: str
+    argumentos: list[Expr]
+
+@dataclass
+class ChamadaCmd(Cmd):
+    chamada: Chamada
+
+@dataclass
+class Binaria(Expr):
+    operador: str 
+    esquerda: Expr 
+    direita: Expr
+
+@dataclass
+class Unaria(Expr):
+    operador: str 
+    expressao: Expr 
+
+@dataclass
+class Numero(Expr):
+    valor: int 
+
+@dataclass 
+class Booleano(Expr):
+    valor: bool
+
 
 # ---------- impressora ----------
 
