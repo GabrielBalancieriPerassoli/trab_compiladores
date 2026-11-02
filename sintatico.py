@@ -30,7 +30,7 @@ class AnalisadorSintatico:
 
     def p_programa(self, p):
         'programa : PROGRAM ID ABRE_CHAVE declaracoes_variaveis declaracoes_funcoes comandos FECHA_CHAVE'
-        print_ast(p[5])
+        p[0] = Programa(nome=p[2], variaveis=p[4], funcoes=p[5], comandos=p[6], linha=p.lineno(2))
 
     # ---------- declarações de variáveis ----------
 
@@ -45,7 +45,7 @@ class AnalisadorSintatico:
 
     def p_declaracao_variavel(self, p):
         'declaracao_variavel : tipo ID PONTO_VIRGULA'
-        p[0] = Vari(tipo=p[1], nome=p[2], linha=p.lineno(3))
+        p[0] = Vari(tipo=p[1], nome=p[2], linha=p.lineno(2))
 
     def p_tipo(self, p):
         '''tipo : INT
@@ -248,5 +248,7 @@ class AnalisadorSintatico:
     def parse(self, data):
         self.erro = False
         self.lexico.input(data)
-        self.parser.parse(lexer=self.lexico)
-        return not self.erro and not self.lexico.tem_erro
+        arvore = self.parser.parse(lexer=self.lexico)
+        if self.erro or self.lexico.tem_erro:
+            return None
+        return arvore

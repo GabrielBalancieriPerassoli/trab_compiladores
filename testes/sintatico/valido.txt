@@ -1,0 +1,24 @@
+program teste {
+    int n;
+    bool ok;
+
+    fun fat(int x) -> int {
+        int r;
+        if (x <= 1) { return 1; } else { r = x * fat(x - 1); }
+        return r;
+    }
+
+    fun mostra() -> void {
+        print(1, true);
+    }
+
+    read(n);
+    ok = !(n < 0) && n != 3 || false;
+    while (n > 0) {
+        print(fat(n));
+        n = n - 1;
+    }
+    mostra();
+    fat(3);
+    n = -n * 2 - -n;
+}
