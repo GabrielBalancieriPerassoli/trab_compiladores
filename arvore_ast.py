@@ -52,6 +52,7 @@ class Programa(No):
     variaveis: list[Vari]
     funcoes: list[Func]
     comandos: list[Cmd]
+    
 @dataclass
 class If(No):
     condicao: Expr 

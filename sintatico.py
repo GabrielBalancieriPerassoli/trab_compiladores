@@ -1,5 +1,6 @@
 import ply.yacc as yacc
 from lexico import AnalisadorLexico
+from arvore_ast import *
 
 # ---------- SINTÁTICO (reconhecedor) ----------
 
@@ -101,7 +102,8 @@ class AnalisadorSintatico:
 
     def p_atribuicao(self, p):
         'atribuicao : ID ATRIB expressao PONTO_VIRGULA'
-        pass
+        p[0] = Atrib(variavel=Id(nome=p[1], linha=p.lineno(1)), expressao=p[3], linha=p.lineno(1))
+        print_ast(p[0])
 
     def p_condicional(self, p):
         '''condicional : IF ABRE_PAREN expressao FECHA_PAREN bloco
@@ -166,28 +168,32 @@ class AnalisadorSintatico:
                      | expressao MENOS expressao
                      | expressao ASTERISCO expressao
                      | expressao DIV expressao'''
-        pass
+        p[0] = Binaria(operador=p[2], esquerda=p[1], direita=p[3], linha=p.lineno(2))
 
     def p_expressao_menos_unario(self, p):
         'expressao : MENOS expressao %prec MENOS_UNARIO'
-        pass
+        p[0] = Unaria(operador=p[1], expressao=p[2], linha=p.lineno(1))
 
     def p_expressao_not(self, p):
         'expressao : NOT_LOGICO expressao'
-        pass
+        p[0] = Unaria(operador=p[1], expressao=p[2], linha=p.lineno(1))
 
     def p_expressao_numero(self, p):
         'expressao : NUM'
-        pass
+        p[0] = Numero(valor=p[1], linha=p.lineno(1))
 
     def p_expressao_booleano(self, p):
         '''expressao : TRUE
                      | FALSE'''
-        pass
+        if p[1] == 'true':
+            valor = True
+        else:
+            valor = False
+        p[0] = Booleano(valor=valor, linha=p.lineno(1))
 
     def p_expressao_identificador(self, p):
         'expressao : ID'
-        pass
+        p[0] = Id(nome=p[1], linha=p.lineno(1))
 
     def p_expressao_chamada(self, p):
         'expressao : chamada'
@@ -195,7 +201,7 @@ class AnalisadorSintatico:
 
     def p_expressao_parenteses(self, p):
         'expressao : ABRE_PAREN expressao FECHA_PAREN'
-        pass
+        p[0] = p[2]
 
     # ---------- auxiliares ----------
 

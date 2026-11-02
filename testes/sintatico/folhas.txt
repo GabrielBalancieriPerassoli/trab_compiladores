@@ -1,0 +1,1 @@
+program p { int x; bool b; x = y; b = true; b = false; }
