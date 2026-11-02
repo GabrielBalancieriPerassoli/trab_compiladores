@@ -1,0 +1,1 @@
+program p { int a; int b; read(a, b); }

@@ -1,0 +1,1 @@
+program p { int a; print(a + 1, a, 7); }

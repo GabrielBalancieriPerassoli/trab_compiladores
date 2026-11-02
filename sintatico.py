@@ -131,21 +131,31 @@ class AnalisadorSintatico:
 
     def p_leitura(self, p):
         'leitura : READ ABRE_PAREN lista_identificadores FECHA_PAREN PONTO_VIRGULA'
-        pass
+        p[0] = Read(leitura=p[3], linha=p.lineno(1))
 
     def p_lista_identificadores(self, p):
         '''lista_identificadores : lista_identificadores VIRGULA ID
                                  | ID'''
-        pass
+        if len(p) == 4:
+            novo = Id(nome=p[3], linha=p.lineno(3))
+            p[1].append(novo)
+            p[0] = p[1]
+        else:
+            primeiro = Id(nome=p[1], linha=p.lineno(1))
+            p[0] = [primeiro]
 
     def p_escrita(self, p):
         'escrita : PRINT ABRE_PAREN lista_expressoes FECHA_PAREN PONTO_VIRGULA'
-        pass
+        p[0] = Print(escrita=p[3], linha=p.lineno(1))
 
     def p_lista_expressoes(self, p):
         '''lista_expressoes : lista_expressoes VIRGULA expressao
                             | expressao'''
-        pass
+        if len(p) == 4:
+            p[1].append(p[3])
+            p[0] = p[1]
+        else:
+            p[0] = [p[1]]
 
     def p_chamada_comando(self, p):
         'chamada_comando : chamada PONTO_VIRGULA'
