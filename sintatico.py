@@ -66,16 +66,20 @@ class AnalisadorSintatico:
     def p_parametros(self, p):
         '''parametros : lista_parametros
                       | vazio'''
-        pass
+        p[0] = p[1]
 
     def p_lista_parametros(self, p):
         '''lista_parametros : lista_parametros VIRGULA parametro
                             | parametro'''
-        pass
+        if len(p) == 4:
+            p[1].append(p[3])
+            p[0] = p[1]
+        else:
+            p[0] = [p[1]]
 
     def p_parametro(self, p):
         'parametro : tipo ID'
-        pass
+        p[0] = Param(tipo=p[1], nome=p[2], linha=p.lineno(2))
 
     def p_tipo_retorno(self, p):
         '''tipo_retorno : INT

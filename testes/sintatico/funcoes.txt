@@ -1,0 +1,10 @@
+program p {
+    fun fat(int n, bool ok) -> int {
+        int r;
+        r = n;
+        return r;
+    }
+    fun mostra() -> void {
+        print(1);
+    }
+}
