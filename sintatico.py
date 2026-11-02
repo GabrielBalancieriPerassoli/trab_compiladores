@@ -30,7 +30,7 @@ class AnalisadorSintatico:
 
     def p_programa(self, p):
         'programa : PROGRAM ID ABRE_CHAVE declaracoes_variaveis declaracoes_funcoes comandos FECHA_CHAVE'
-        print_ast(p[4])
+        print_ast(p[5])
 
     # ---------- declarações de variáveis ----------
 
@@ -57,7 +57,11 @@ class AnalisadorSintatico:
     def p_declaracoes_funcoes(self, p):
         '''declaracoes_funcoes : declaracoes_funcoes declaracao_funcao
                                | vazio'''
-        pass
+        if len(p) == 3:
+            p[1].append(p[2])
+            p[0] = p[1]
+        else: 
+            p[0] = []
 
     def p_declaracao_funcao(self, p):
         'declaracao_funcao : FUN ID ABRE_PAREN parametros FECHA_PAREN SETA tipo_retorno ABRE_CHAVE declaracoes_variaveis comandos FECHA_CHAVE'
