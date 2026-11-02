@@ -30,23 +30,27 @@ class AnalisadorSintatico:
 
     def p_programa(self, p):
         'programa : PROGRAM ID ABRE_CHAVE declaracoes_variaveis declaracoes_funcoes comandos FECHA_CHAVE'
-        print_ast(p[6])
+        print_ast(p[4])
 
     # ---------- declarações de variáveis ----------
 
     def p_declaracoes_variaveis(self, p):
         '''declaracoes_variaveis : declaracoes_variaveis declaracao_variavel
                                  | vazio'''
-        pass
+        if len(p) == 3:
+            p[1].append(p[2])
+            p[0] = p[1]
+        else: 
+            p[0] = []
 
     def p_declaracao_variavel(self, p):
         'declaracao_variavel : tipo ID PONTO_VIRGULA'
-        pass
+        p[0] = Vari(tipo=p[1], nome=p[2], linha=p.lineno(3))
 
     def p_tipo(self, p):
         '''tipo : INT
                 | BOOL'''
-        pass
+        p[0] = p[1]
 
     # ---------- declarações de funções ----------
 
@@ -159,16 +163,16 @@ class AnalisadorSintatico:
 
     def p_chamada_comando(self, p):
         'chamada_comando : chamada PONTO_VIRGULA'
-        pass
+        p[0] = ChamadaCmd(chamada=p[1], linha=p[1].linha)
 
     def p_chamada(self, p):
         'chamada : ID ABRE_PAREN argumentos FECHA_PAREN'
-        pass
+        p[0] = Chamada(nome=p[1], argumentos=p[3], linha=p.lineno(1))
 
     def p_argumentos(self, p):
         '''argumentos : lista_expressoes
                       | vazio'''
-        pass
+        p[0] = p[1]
 
     # ---------- expressões ----------
 
@@ -214,7 +218,7 @@ class AnalisadorSintatico:
 
     def p_expressao_chamada(self, p):
         'expressao : chamada'
-        pass
+        p[0] = p[1]
 
     def p_expressao_parenteses(self, p):
         'expressao : ABRE_PAREN expressao FECHA_PAREN'
@@ -224,7 +228,7 @@ class AnalisadorSintatico:
 
     def p_vazio(self, p):
         'vazio :'
-        pass
+        p[0] = []
 
     def p_error(self, p):
         self.erro = True
