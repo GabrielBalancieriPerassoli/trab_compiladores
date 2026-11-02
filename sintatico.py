@@ -61,7 +61,7 @@ class AnalisadorSintatico:
 
     def p_declaracao_funcao(self, p):
         'declaracao_funcao : FUN ID ABRE_PAREN parametros FECHA_PAREN SETA tipo_retorno ABRE_CHAVE declaracoes_variaveis comandos FECHA_CHAVE'
-        pass
+        p[0] = Func(nome=p[2], retorno=p[7], variaveis=p[9], parametros=p[4], comandos=p[10], linha=p.lineno(1))
 
     def p_parametros(self, p):
         '''parametros : lista_parametros
@@ -85,7 +85,7 @@ class AnalisadorSintatico:
         '''tipo_retorno : INT
                         | BOOL
                         | VOID'''
-        pass
+        p[0] = p[1]
 
     # ---------- comandos ----------
 
