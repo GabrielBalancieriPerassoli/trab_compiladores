@@ -30,7 +30,7 @@ class AnalisadorSintatico:
 
     def p_programa(self, p):
         'programa : PROGRAM ID ABRE_CHAVE declaracoes_variaveis declaracoes_funcoes comandos FECHA_CHAVE'
-        pass
+        print_ast(p[6])
 
     # ---------- declarações de variáveis ----------
 
@@ -84,7 +84,11 @@ class AnalisadorSintatico:
     def p_comandos(self, p):
         '''comandos : comandos comando
                     | vazio'''
-        pass
+        if len(p) == 3:          # comandos comando
+            p[1].append(p[2])    # pega a lista que já existe e acrescenta o novo
+            p[0] = p[1]
+        else:                    # vazio
+            p[0] = []            # começa uma lista vazia
 
     def p_comando(self, p):
         '''comando : atribuicao
@@ -94,7 +98,7 @@ class AnalisadorSintatico:
                    | leitura
                    | escrita
                    | chamada_comando'''
-        pass
+        p[0] = p[1]
 
     def p_comando_erro(self, p):
         'comando : error PONTO_VIRGULA'
@@ -103,24 +107,27 @@ class AnalisadorSintatico:
     def p_atribuicao(self, p):
         'atribuicao : ID ATRIB expressao PONTO_VIRGULA'
         p[0] = Atrib(variavel=Id(nome=p[1], linha=p.lineno(1)), expressao=p[3], linha=p.lineno(1))
-        print_ast(p[0])
 
     def p_condicional(self, p):
         '''condicional : IF ABRE_PAREN expressao FECHA_PAREN bloco
                        | IF ABRE_PAREN expressao FECHA_PAREN bloco ELSE bloco'''
-        pass
+        if len(p) == 8:
+            senao = p[7]
+        else:
+            senao = []
+        p[0] = If(condicao=p[3], entao=p[5], senao=senao, linha=p.lineno(1))
 
     def p_repeticao(self, p):
         'repeticao : WHILE ABRE_PAREN expressao FECHA_PAREN bloco'
-        pass
+        p[0] = While(condicao=p[3], corpo=p[5], linha=p.lineno(1))
 
     def p_bloco(self, p):
         'bloco : ABRE_CHAVE comandos FECHA_CHAVE'
-        pass
+        p[0] = p[2]
 
     def p_retorno(self, p):
         'retorno : RETURN expressao PONTO_VIRGULA'
-        pass
+        p[0] = Return(expressao=p[2], linha=p.lineno(1))
 
     def p_leitura(self, p):
         'leitura : READ ABRE_PAREN lista_identificadores FECHA_PAREN PONTO_VIRGULA'
