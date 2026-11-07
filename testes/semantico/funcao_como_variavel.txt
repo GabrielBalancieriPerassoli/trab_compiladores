@@ -1,0 +1,1 @@
+program p { int x; fun f() -> int { return 1; } x = f; f = 2; read(f); }

@@ -1,0 +1,18 @@
+program p {
+    int x;
+    fun fat(int n) -> int {
+        if (n <= 1) { return 1; }
+        return n * fat(n - 1);
+    }
+    fun mostra() -> void {
+        print(1);
+    }
+    x = fat(5);
+    mostra();
+    fat(3);
+    x = g(1);
+    x = x(1);
+    x = fat();
+    x = fat(true);
+    x = mostra() + 1;
+}

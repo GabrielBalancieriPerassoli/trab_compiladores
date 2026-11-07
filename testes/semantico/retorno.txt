@@ -1,0 +1,16 @@
+program p {
+    int x;
+    fun a() -> int {
+        return 1;
+    }
+    fun b() -> int {
+        x = 1;
+    }
+    fun c() -> bool {
+        return 5;
+    }
+    fun d() -> void {
+        return 1;
+    }
+    return x;
+}
