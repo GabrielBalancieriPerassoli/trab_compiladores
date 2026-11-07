@@ -1,0 +1,13 @@
+program p {
+    int x;
+    bool b;
+    if (b) { x = 1; } else { x = 2; }
+    while (x > 0) { x = x - 1; }
+    read(x, b);
+    print(x + 1, b);
+    if (x) { x = 0; }
+    while (1) { }
+    read(z);
+    print(w);
+    if (b) { x = true; }
+}

@@ -1,0 +1,12 @@
+program p {
+    int x;
+    bool b;
+    x = 1 + 2 * 3;
+    b = x < 10 && true;
+    b = x == 1;
+    x = 1 + true;
+    b = 1 < true;
+    b = 1 == true;
+    b = !x;
+    x = -b;
+}

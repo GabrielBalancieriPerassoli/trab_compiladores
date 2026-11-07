@@ -1,0 +1,5 @@
+program p {
+    int x;
+    bool x;
+    int y;
+}
