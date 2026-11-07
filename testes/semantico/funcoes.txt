@@ -1,0 +1,11 @@
+program p {
+    int g;
+    fun f(int x, bool x) -> int {
+        int g;
+        int x;
+        g = x;
+    }
+    fun f() -> void {
+    }
+    g = 1;
+}

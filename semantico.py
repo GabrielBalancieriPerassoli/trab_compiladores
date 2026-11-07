@@ -79,6 +79,43 @@ class AnalisadorSemantico:
         for comando in no.corpo:
             self.visita(comando)
 
+    def visita_Func(self, no):
+        if self.ts.existe_no_escopo(no.nome):
+            self.erro(no.linha, f"função '{no.nome}' já declarada")
+            return
+
+        tipos_parametros = [p.tipo for p in no.parametros]
+
+        simbolo = Simbolo(nome=no.nome, categoria='fun', tipo=no.retorno,
+                          nivel=0, parametros=tipos_parametros)
+        
+        no.simbolo = simbolo
+        self.ts.instala(simbolo)
+
+        self.ts.entra_funcao()
+        self.proximo_endereco = 0
+
+        for parametro in no.parametros:
+            self.visita(parametro)
+        for variavel in no.variaveis:
+            self.visita(variavel)
+        for comando in no.comandos:
+            self.visita(comando)
+
+        self.ts.sai_funcao()
+
+    def visita_Param(self, no):
+        if self.ts.existe_no_escopo(no.nome):
+            self.erro(no.linha, f"parâmetro '{no.nome}' já declarado")
+            return
+
+        simbolo = Simbolo(nome=no.nome, categoria='param', tipo=no.tipo,
+                          nivel=self.ts.nivel, endereco=self.proximo_endereco)
+        self.proximo_endereco += 1
+
+        no.simbolo = simbolo
+        self.ts.instala(simbolo)
+
     def visita_Read(self, no):
         for variavel in no.leitura:
             self.visita(variavel)
