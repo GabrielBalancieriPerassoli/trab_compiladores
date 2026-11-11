@@ -1,0 +1,18 @@
+program controle {
+    int n;
+    int soma;
+
+    read(n);
+    soma = 0;
+    while (n > 0) {
+        if (n / 2 * 2 == n) {
+            soma = soma + n;
+        } else {
+            print(n);
+        }
+        n = n - 1;
+    }
+    if (soma > 10) {
+        print(soma);
+    }
+}

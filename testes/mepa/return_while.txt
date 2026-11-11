@@ -1,0 +1,24 @@
+program busca {
+    int n;
+
+    fun primeiro_divisor(int x) -> int {
+        int d;
+        d = 2;
+        while (d < x) {
+            if (x / d * d == x) {
+                return d;
+            }
+            d = d + 1;
+        }
+        return x;
+    }
+
+    fun eh_primo(int x) -> bool {
+        bool r;
+        r = primeiro_divisor(x) == x;
+        return r && x > 1;
+    }
+
+    read(n);
+    print(primeiro_divisor(n), eh_primo(n), -primeiro_divisor(n + 2));
+}
