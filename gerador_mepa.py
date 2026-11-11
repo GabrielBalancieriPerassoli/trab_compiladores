@@ -11,9 +11,16 @@ class GeradorMepa:
         '==': 'CMIG', '!=': 'CMDG', '&&': 'CONJ', '||': 'DISJ',
     }
 
+    # variante CHPR p,k: endereço de retorno, k e D[k] salvo ficam entre os parâmetros e as locais
+    tamanho_controle = 3
+
     def __init__(self):
         self.codigo = []
         self.contador_rotulos = 0
+        self.nivel = 0
+        self.rotulos_funcoes = {}
+        self.num_parametros = 0
+        self.rotulo_fim_funcao = None
 
     # ---------- saída ----------
 
@@ -33,7 +40,14 @@ class GeradorMepa:
     # ---------- endereços ----------
 
     def endereco(self, simbolo):
-        return simbolo.nivel, simbolo.endereco
+        if simbolo.nivel == 0:
+            return 0, simbolo.endereco
+        if simbolo.categoria == 'param':
+            return 1, simbolo.endereco - (self.num_parametros + self.tamanho_controle)
+        return 1, simbolo.endereco - self.num_parametros
+
+    def endereco_resultado(self):
+        return 1, -(self.num_parametros + self.tamanho_controle + 1)
 
     # ---------- visitador ----------
 
@@ -51,13 +65,61 @@ class GeradorMepa:
         self.emite('INPP')
         if no.variaveis:
             self.emite('AMEM', len(no.variaveis))
+
+        if no.funcoes:
+            rotulo_principal = self.novo_rotulo()
+            for funcao in no.funcoes:
+                self.rotulos_funcoes[funcao.nome] = self.novo_rotulo()
+            self.emite('DSVS', rotulo_principal)
+            for funcao in no.funcoes:
+                self.visita(funcao)
+            self.emite('NADA', rotulo=rotulo_principal)
+
         for comando in no.comandos:
             self.visita(comando)
         if no.variaveis:
             self.emite('DMEM', len(no.variaveis))
         self.emite('PARA')
 
+    # ---------- funções ----------
+
+    def visita_Func(self, no):
+        self.nivel = 1
+        self.num_parametros = len(no.parametros)
+        self.rotulo_fim_funcao = self.novo_rotulo()
+
+        self.emite('ENPR', 1, rotulo=self.rotulos_funcoes[no.nome])
+        if no.variaveis:
+            self.emite('AMEM', len(no.variaveis))
+        for comando in no.comandos:
+            self.visita(comando)
+        self.emite('NADA', rotulo=self.rotulo_fim_funcao)
+        if no.variaveis:
+            self.emite('DMEM', len(no.variaveis))
+        self.emite('RTPR', 1, self.num_parametros)
+
+        self.nivel = 0
+        self.num_parametros = 0
+        self.rotulo_fim_funcao = None
+
+    def visita_Return(self, no):
+        self.visita(no.expressao)
+        self.emite('ARMZ', *self.endereco_resultado())
+        self.emite('DSVS', self.rotulo_fim_funcao)
+
+    def chama(self, no):
+        if no.simbolo.tipo != 'void':
+            self.emite('AMEM', 1)
+        for argumento in no.argumentos:
+            self.visita(argumento)
+        self.emite('CHPR', self.rotulos_funcoes[no.nome], self.nivel)
+
     # ---------- comandos ----------
+
+    def visita_ChamadaCmd(self, no):
+        self.chama(no.chamada)
+        if no.chamada.simbolo.tipo != 'void':
+            self.emite('DMEM', 1)
 
     def visita_Atrib(self, no):
         self.visita(no.expressao)
@@ -119,10 +181,14 @@ class GeradorMepa:
         self.visita(no.expressao)
         self.emite('INVR' if no.operador == '-' else 'NEGA')
 
+    def visita_Chamada(self, no):
+        self.chama(no)
+
     # ---------- ponto de entrada ----------
 
     def gerar(self, arvore):
         self.codigo = []
         self.contador_rotulos = 0
+        self.rotulos_funcoes = {}
         self.visita(arvore)
         return '\n'.join(self.codigo)
