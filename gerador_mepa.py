@@ -13,8 +13,13 @@ class GeradorMepa:
 
     def __init__(self):
         self.codigo = []
+        self.contador_rotulos = 0
 
     # ---------- saída ----------
+
+    def novo_rotulo(self):
+        self.contador_rotulos += 1
+        return f'L{self.contador_rotulos}'
 
     def emite(self, instrucao, *argumentos, rotulo=None):
         texto = instrucao
@@ -58,6 +63,32 @@ class GeradorMepa:
         self.visita(no.expressao)
         self.emite('ARMZ', *self.endereco(no.variavel.simbolo))
 
+    def visita_If(self, no):
+        rotulo_senao = self.novo_rotulo()
+        rotulo_fim = self.novo_rotulo()
+
+        self.visita(no.condicao)
+        self.emite('DSVF', rotulo_senao)
+        for comando in no.entao:
+            self.visita(comando)
+        self.emite('DSVS', rotulo_fim)
+        self.emite('NADA', rotulo=rotulo_senao)
+        for comando in no.senao:
+            self.visita(comando)
+        self.emite('NADA', rotulo=rotulo_fim)
+
+    def visita_While(self, no):
+        rotulo_inicio = self.novo_rotulo()
+        rotulo_fim = self.novo_rotulo()
+
+        self.emite('NADA', rotulo=rotulo_inicio)
+        self.visita(no.condicao)
+        self.emite('DSVF', rotulo_fim)
+        for comando in no.corpo:
+            self.visita(comando)
+        self.emite('DSVS', rotulo_inicio)
+        self.emite('NADA', rotulo=rotulo_fim)
+
     def visita_Read(self, no):
         for variavel in no.leitura:
             self.emite('LEIT')
@@ -92,5 +123,6 @@ class GeradorMepa:
 
     def gerar(self, arvore):
         self.codigo = []
+        self.contador_rotulos = 0
         self.visita(arvore)
         return '\n'.join(self.codigo)
