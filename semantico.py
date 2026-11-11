@@ -108,9 +108,9 @@ class AnalisadorSemantico:
         for comando in no.comandos:
             self.visita(comando)
 
-        if no.retorno != 'void' and not self.achou_return:      # NOVO: faltou o return?
+        if no.retorno != 'void' and not self.achou_return:
             self.erro(no.linha, f"função '{no.nome}' precisa de return")
-        self.funcao_atual = None                                 # NOVO: "saí da função"
+        self.funcao_atual = None
 
         self.ts.sai_funcao()
 
