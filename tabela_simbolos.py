@@ -11,32 +11,32 @@ class Simbolo:
     nivel: int
     endereco: int = None
     parametros: list = field(default_factory=list)
+    rotulo_entrada: str = None
+    rotulo_saida: str = None
 
 
 class TabelaSimbolos:
 
     def __init__(self):
-        self.simbolos = []
+        self.escopos = [{}]
         self.nivel = 0
 
     def instala(self, simbolo):
-        self.simbolos.append(simbolo)
+        self.escopos[-1][simbolo.nome] = simbolo
 
     def busca(self, nome):
-        for simbolo in reversed(self.simbolos):
-            if simbolo.nome == nome:
-                return simbolo
+        for escopo in reversed(self.escopos):
+            if nome in escopo:
+                return escopo[nome]
         return None
 
     def existe_no_escopo(self, nome):
-        for simbolo in self.simbolos:
-            if simbolo.nome == nome and simbolo.nivel == self.nivel:
-                return True
-        return False
+        return nome in self.escopos[-1]
 
-    def entra_funcao(self):
-        self.nivel = 1
+    def entrar_escopo(self):
+        self.escopos.append({})
+        self.nivel += 1
 
-    def sai_funcao(self):
-        self.simbolos = [s for s in self.simbolos if s.nivel != 1]
-        self.nivel = 0
+    def sair_escopo(self):
+        self.escopos.pop()
+        self.nivel -= 1

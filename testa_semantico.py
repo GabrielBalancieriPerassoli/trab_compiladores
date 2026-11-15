@@ -13,13 +13,12 @@ if arvore is None:
     print("Programa rejeitado (erro léxico ou sintático)")
 else:
     semantico = AnalisadorSemantico()
-    erros = semantico.analisar(arvore)
-    if erros:
-        for mensagem in erros:
-            print(mensagem)
-        print("Programa rejeitado")
-    else:
+    if semantico.analisar(arvore):
         print("Programa aceito")
+    else:
+        for linha, mensagem in sorted(semantico.erros):
+            print(f"ERRO semântico - {mensagem} na linha {linha}")
+        print("Programa rejeitado")
 
-    for simbolo in semantico.ts.simbolos:
+    for simbolo in semantico.ts.escopos[0].values():
         print(simbolo)

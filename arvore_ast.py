@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field, fields
+from tabela_simbolos import Simbolo
 
 
 # ---------- classes base ----------
@@ -14,93 +15,104 @@ class Cmd(No):
 
 @dataclass
 class Expr(No):
-    pass
+    tipo: str | None = field(default=None, kw_only=True)
 
 
-# ---------- nós do Coda ----------
+# ---------- nós do Coda: declarações ----------
+
+@dataclass
+class Programa(No):
+    nome: str
+    variaveis: list[Vari]
+    funcoes: list[Func]
+    comandos: list[Cmd]
+
+@dataclass
+class Vari(No):
+    tipo: str
+    nome: str
+    simbolo: Simbolo | None = None
+
+@dataclass
+class Param(No):
+    tipo: str
+    nome: str
+    simbolo: Simbolo | None = None
+
+@dataclass
+class Func(No):
+    nome: str
+    retorno: str
+    parametros: list[Param]
+    variaveis: list[Vari]
+    comandos: list[Cmd]
+    simbolo: Simbolo | None = None
+
+
+# ---------- nós do Coda: comandos ----------
 
 @dataclass
 class Atrib(Cmd):
     variavel: Id
     expressao: Expr
 
-@dataclass  
-class Id(No):
-    nome: str
-
 @dataclass
-class Param(No):
-    tipo: str
-    nome: str
-
-@dataclass
-class Vari(No):
-    tipo: str
-    nome: str
-
-@dataclass
-class Func(No):             
-    nome: str
-    retorno: str
-    parametros: list[Param]
-    variaveis: list[Vari]
-    comandos: list[Cmd]
-
-@dataclass
-class Programa(No):
-    nome: str 
-    variaveis: list[Vari]
-    funcoes: list[Func]
-    comandos: list[Cmd]
-    
-@dataclass
-class If(No):
-    condicao: Expr 
+class If(Cmd):
+    condicao: Expr
     entao: list[Cmd]
     senao: list[Cmd]
 
 @dataclass
-class While(No):
-    condicao: Expr 
+class While(Cmd):
+    condicao: Expr
     corpo: list[Cmd]
 
 @dataclass
-class Return(No):
+class Return(Cmd):
     expressao: Expr
 
 @dataclass
-class Read(No):
+class Read(Cmd):
     leitura: list[Id]
 
 @dataclass
-class Print(No):
+class Print(Cmd):
     escrita: list[Expr]
-
-@dataclass
-class Chamada(Expr):
-    nome: str
-    argumentos: list[Expr]
 
 @dataclass
 class ChamadaCmd(Cmd):
     chamada: Chamada
 
+
+# ---------- nós do Coda: expressões ----------
+
+@dataclass
+class Id(Expr):
+    nome: str
+    simbolo: Simbolo | None = None
+
+@dataclass
+class Chamada(Expr):
+    nome: str
+    argumentos: list[Expr]
+    simbolo: Simbolo | None = None
+
 @dataclass
 class Binaria(Expr):
-    operador: str 
-    esquerda: Expr 
+    operador: str
+    esquerda: Expr
     direita: Expr
 
 @dataclass
 class Unaria(Expr):
-    operador: str 
-    expressao: Expr 
+    operador: str
+    expressao: Expr
 
 @dataclass
 class Numero(Expr):
-    valor: int 
+    valor: int
 
-@dataclass 
+@dataclass
 class Booleano(Expr):
     valor: bool
 
