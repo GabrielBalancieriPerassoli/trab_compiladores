@@ -297,3 +297,4 @@ A coluna "Por quê" é preenchida pela dupla, com as nossas palavras (a professo
 | Léxico (e as próximas fases) organizados como classe | funções soltas no módulo | |
 | Código na raiz do repositório | pasta `src/` | |
 | Palavras reservadas por dicionário consultado no `t_ID` | uma regra por palavra | |
+| Chamada na variante `CHPR p,k` (parâmetros em `-(n+3)+i`, resultado em `-(n+4)`) (confirmar com a professora) | `CHPR p` (parâmetros em `-(n+2)+i`, só muda `tamanho_controle` no `gerador_mepa.py`) | |
