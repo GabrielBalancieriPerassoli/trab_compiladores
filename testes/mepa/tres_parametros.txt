@@ -1,0 +1,24 @@
+program extra {
+    int x;
+    int r;
+
+    fun combina(int a, int b, int c) -> int {
+        int x;
+        x = a * 100 + b * 10 + c;
+        return x;
+    }
+
+    fun conta(int n) -> int {
+        int i;
+        i = 0;
+        while (i < n) {
+            combina(i, i, i);
+            i = i + 1;
+        }
+        return i;
+    }
+
+    x = 5;
+    r = combina(1, 2, 3);
+    print(r, x, conta(4), combina(9, 8, 7) - 987);
+}

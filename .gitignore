@@ -4,3 +4,7 @@ parser.out
 
 # cache do Python
 __pycache__/
+# interpretador MEPA da professora (não versionar)
+interpretador/
+*.mepa
+*.mepa

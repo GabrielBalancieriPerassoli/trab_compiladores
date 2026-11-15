@@ -1,0 +1,9 @@
+program expressoes {
+    int a;
+    int b;
+    bool c;
+
+    read(a, b);
+    c = !(a < b) && a != 0 || false;
+    print(a - b, a / b, -a * b, a - -b, c);
+}

@@ -1,0 +1,19 @@
+program exemplo {
+    int x;
+    int y;
+
+    fun p(int t) -> void {
+        int z;
+        if (t > 1) {
+            p(t - 1);
+        } else {
+            y = 1;
+        }
+        z = y;
+        y = z * t;
+    }
+
+    read(x);
+    p(x);
+    print(x, y);
+}
